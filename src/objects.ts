@@ -76,10 +76,17 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
-    let markdown = `# ${question.name}\n${question.body}\n`;
-    question.options.forEach((option) => {
-        markdown += `- ${option}\n`;
-    });
+    let markdown = `# ${question.name}\n${question.body}`;
+
+    if (
+        question.type === "multiple_choice_question" &&
+        question.options.length > 0
+    ) {
+        question.options.forEach((option) => {
+            markdown += `\n- ${option}`;
+        });
+    }
+
     return markdown;
 }
 
@@ -88,7 +95,7 @@ export function toMarkdown(question: Question): string {
  * `newName`.
  */
 export function renameQuestion(question: Question, newName: string): Question {
-    return question;
+    return { ...question, name: newName };
 }
 
 /**
@@ -97,7 +104,7 @@ export function renameQuestion(question: Question, newName: string): Question {
  * published; if it was published, now it should be not published.
  */
 export function publishQuestion(question: Question): Question {
-    return question;
+    return { ...question, published: !question.published };
 }
 
 /**
@@ -107,7 +114,12 @@ export function publishQuestion(question: Question): Question {
  * The `published` field should be reset to false.
  */
 export function duplicateQuestion(id: number, oldQuestion: Question): Question {
-    return oldQuestion;
+    return {
+        ...oldQuestion,
+        id,
+        name: `Copy of ${oldQuestion.name}`,
+        published: false,
+    };
 }
 
 /**
