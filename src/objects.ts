@@ -42,7 +42,10 @@ export function isCorrect(question: Question, answer: string): boolean {
  * be exactly one of the options.
  */
 export function isValid(question: Question, answer: string): boolean {
-    return false;
+    if (question.type === "short_answer_question") {
+        return true;
+    }
+    return question.options.includes(answer.trim());
 }
 
 /**
@@ -52,7 +55,7 @@ export function isValid(question: Question, answer: string): boolean {
  * name "My First Question" would become "9: My First Q".
  */
 export function toShortForm(question: Question): string {
-    return "";
+    return `${question.id}: ${question.name.substring(0, 10)}`;
 }
 
 /**
@@ -73,7 +76,11 @@ export function toShortForm(question: Question): string {
  * Check the unit tests for more examples of what this looks like!
  */
 export function toMarkdown(question: Question): string {
-    return "";
+    let markdown = `# ${question.name}\n${question.body}\n`;
+    question.options.forEach((option) => {
+        markdown += `- ${option}\n`;
+    });
+    return markdown;
 }
 
 /**
